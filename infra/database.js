@@ -15,7 +15,7 @@ async function query(queryObject) {
   return result;
 }
 
-async function version() {
+async function getVersion() {
   const client = new Client({
     host: process.env.POSTGRES_HOST,
     port: process.env.POSTGRES_PORT,
@@ -24,14 +24,14 @@ async function version() {
     password: process.env.POSTGRES_PASSWORD,
   });
   await client.connect();
-  const result = await client.query(`SHOW server_version`);
+  const result = await client.query("SHOW server_version;");
   const server_version = result.rows[0].server_version;
   await client.end();
 
   return server_version;
 }
 
-async function max_connections() {
+async function getMaxConnections() {
   const client = new Client({
     host: process.env.POSTGRES_HOST,
     port: process.env.POSTGRES_PORT,
@@ -40,14 +40,14 @@ async function max_connections() {
     password: process.env.POSTGRES_PASSWORD,
   });
   await client.connect();
-  const result = await client.query(`SHOW max_connections`);
-  const max_connections = result.rows[0].max_connections;
+  const result = await client.query("SHOW max_connections;");
+  const maxConnections = parseInt(result.rows[0].max_connections);
   await client.end();
 
-  return max_connections;
+  return maxConnections;
 }
 
-async function opened_connections() {
+async function getOpenedConnections() {
   const client = new Client({
     host: process.env.POSTGRES_HOST,
     port: process.env.POSTGRES_PORT,
@@ -57,17 +57,17 @@ async function opened_connections() {
   });
   await client.connect();
   const result = await client.query(
-    `SELECT COUNT(*) FROM pg_stat_activity LIMIT 1`,
+    "SELECT count(*)::int FROM pg_stat_activity WHERE datname = 'local_db';",
   );
-  const opened_connections = result.rows[0].count;
+  const openedConnections = result.rows[0].count;
   await client.end();
 
-  return opened_connections;
+  return openedConnections;
 }
 
 export default {
   query: query,
-  version: version,
-  max_connections: max_connections,
-  opened_connections: opened_connections,
+  getVersion: getVersion,
+  getMaxConnections: getMaxConnections,
+  getOpenedConnections: getOpenedConnections,
 };
