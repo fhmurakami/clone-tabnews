@@ -9,10 +9,17 @@ async function query(queryObject) {
     password: process.env.POSTGRES_PASSWORD,
   });
   await client.connect();
-  const result = await client.query(queryObject);
-  await client.end();
 
-  return result;
+  try {
+    const result = await client.query(queryObject);
+
+    return result;
+  } catch (error) {
+    console.error(error)
+  } finally {
+    await client.end();
+  }
+
 }
 
 async function getVersion() {
@@ -24,11 +31,17 @@ async function getVersion() {
     password: process.env.POSTGRES_PASSWORD,
   });
   await client.connect();
-  const result = await client.query("SHOW server_version;");
-  const server_version = result.rows[0].server_version;
-  await client.end();
 
-  return server_version;
+  try {
+    const result = await client.query("SHOW server_version;");
+    const server_version = result.rows[0].server_version;
+
+    return server_version;
+  } catch (error) {
+    console.error(error)
+  } finally{
+    await client.end();
+  }
 }
 
 async function getMaxConnections() {
@@ -40,14 +53,20 @@ async function getMaxConnections() {
     password: process.env.POSTGRES_PASSWORD,
   });
   await client.connect();
-  const result = await client.query("SHOW max_connections;");
-  const maxConnections = parseInt(result.rows[0].max_connections);
-  await client.end();
 
-  return maxConnections;
+  try {
+    const result = await client.query("SHOW max_connections;");
+    const maxConnections = parseInt(result.rows[0].max_connections);
+
+    return maxConnections;
+  } catch (error) {
+    console.error(error)
+  } finally {
+    await client.end();
+  }
 }
 
-async function getOpenedConnections() {
+async function getOpenedConnections(databaseName) {
   const client = new Client({
     host: process.env.POSTGRES_HOST,
     port: process.env.POSTGRES_PORT,
@@ -56,13 +75,21 @@ async function getOpenedConnections() {
     password: process.env.POSTGRES_PASSWORD,
   });
   await client.connect();
-  const result = await client.query(
-    "SELECT count(*)::int FROM pg_stat_activity WHERE datname = 'local_db';",
-  );
+  
+  try {
+  const result = await client.query({
+    text: "SELECT count(*)::int FROM pg_stat_activity WHERE datname = $1;",
+    values: [databaseName]
+  });
   const openedConnections = result.rows[0].count;
-  await client.end();
 
   return openedConnections;
+    
+  } catch (error) {
+    console.error(error)
+  } finally {
+  await client.end();
+  }
 }
 
 export default {
