@@ -4,7 +4,7 @@ async function status(request, response) {
   const updatedAt = new Date().toISOString();
   const postgresVersion = await database.getVersion();
   const maxConnections = await database.getMaxConnections();
-  const openedConnections = await database.getOpenedConnections();
+  const openedConnections = await database.getOpenedConnections(process.env.POSTGRES_DB);
 
   response.status(200).json({
     updated_at: updatedAt,
