@@ -1,21 +1,22 @@
 function Home() {
   return (
     <div>
-      <h1>Oi, Gaby!</h1>
+      <h1>Página em construção</h1>
       <p>
-        Gostaria de dizer que estou realmente muito feliz pelo seu novo emprego!
-        \o/
+        Implementação do site TabNews (https://www.tabnews.com.br) para o curso.dev ministrado pelo @filipedeschamps (https://curso.dev)
       </p>
-      <p>Sempre torci pelo seu sucesso, e continuarei torcendo. :)</p>
-      <p>
-        Sinto falta do nosso convívio diário, das pausas pro cafézinho, das
-        noites assistindo (Des)encanto em casa, ou jogando Miranha...
-      </p>
-      <p>Sua companhia tornava o trampo muito mais leve.</p>
-      <p>
-        Pena que acabamos nos afastando um pouco nesses últimos anos, mas saiba
-        que eu continuo te achando foda pra caralho! 💜
-      </p>
+      <p>Tecnologias utilizadas:</p>
+      <ul>
+        <li>Git e GitHub</li>
+        <li>Javascript</li>
+        <li>Next.js</li>
+        <li>React</li>
+        <li>PostgreSQL</li>
+        <li>Testes Automatizados</li>
+        <li>Continuous Integration</li>
+        <li>Infraestrutura como Código</li>
+        <li>Entre outras</li>
+      </ul>
     </div>
   );
 }
